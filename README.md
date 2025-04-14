@@ -3,7 +3,7 @@
 If you want to quickly highlight code syntax on your web pages without reading through the PrismJS documentation for integration, this is the solution for you. Here’s the script link:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/prismjs-loader@v1.0.0/dist/prismjs-loader.js"
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/prismjs-loader@v1.0.1/dist/prismjs-loader.js"
     integrity="sha384-WxJ7af4egxjXGSl/0ldvVBiaBVhKXo3vu3qHG/Av4ZnfNVSJuX8d0Kgn5m7cFlI/"
     crossorigin="anonymous" defer>
 </script>
@@ -17,6 +17,7 @@ This script automatically downloads the following:
 
 - PrismJS core package
 - Autoloader plugin package
+- Line number plugin package
 - Default Prism theme file
 
 Once all resources are loaded, the autoloader plugin determines which language grammar packages should be fetched next.
@@ -28,8 +29,9 @@ All requests occur after the page finishes rendering, so your page’s SEO score
 If you want to load themes other than the default, you can specify them in the class attribute of the script tag.
 
 ```html
+
 <!-- Load the prism-coy theme in dark mode; otherwise, load the prism-funky theme -->
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/prismjs-loader@v1.0.0/dist/prismjs-loader.js"
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/prismjs-loader@v1.0.1/dist/prismjs-loader.js"
     integrity="sha384-WxJ7af4egxjXGSl/0ldvVBiaBVhKXo3vu3qHG/Av4ZnfNVSJuX8d0Kgn5m7cFlI/"
     crossorigin="anonymous" defer
     class="dark:prism-coy prism-funky">
