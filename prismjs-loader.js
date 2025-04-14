@@ -80,6 +80,8 @@
     { tagName: 'script', src: '/plugins/line-numbers/prism-line-numbers.min.js' }
   ]
 
+  const count = 15 * 60 // ~ roughly 15s
+
   function checkLoadingStatus(isLoaded) {
     return new Promise((res, rej) => {
       let cycle = 0
@@ -88,7 +90,7 @@
           res()
         } else {
           cycle++
-          if (cycle > 200) {
+          if (cycle > count) {
             rej(new Error('Prism failed to load within the expected time.'))
           } else {
             requestAnimationFrame(loop)
