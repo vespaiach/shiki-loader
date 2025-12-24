@@ -3,6 +3,12 @@
     return
   }
 
+  // Guard against multiple executions
+  if (window.__prismjsLoaderInitialized) {
+    return
+  }
+  window.__prismjsLoaderInitialized = true
+
   const BASE_URL = 'https://cdn.jsdelivr.net/gh/PrismJS/prism@1.30.0'
   const ALL_THEMES = ['prism', 'prism-coy', 'prism-dark', 'prism-funky', 'prism-okaidia', 'prism-solarizedlight', 'prism-tomorrow', 'prism-twilight']
   const DEFAULT_THEME = ALL_THEMES[0]
@@ -20,18 +26,24 @@
   }
 
   /**
+   * Parses a theme string and returns theme configuration.
+   *
+   * @param {string} theme - The theme string to parse.
+   * @returns {{ dark?: string, light?: string }} Theme configuration object.
+   */
+  function parseTheme(theme) {
+    const themeObject = getThemeNameAndMode(theme)
+    return themeObject
+      ? { dark: themeObject.forDarkMode ? themeObject.name : undefined, light: themeObject.forDarkMode ? undefined : themeObject.name }
+      : { light: DEFAULT_THEME }
+  }
+
+  /**
    * Retrieves theme options for light and dark modes based on the current script's class list.
    *
-   * @returns {Object} Theme options for light and dark modes.
+   * @returns {{ dark?: string, light: string }} Theme options for light and dark modes.
    */
   function getThemeOptions() {
-    const parseTheme = (theme) => {
-      const themeObject = getThemeNameAndMode(theme)
-      return themeObject
-        ? { dark: themeObject.forDarkMode ? themeObject.name : undefined, light: themeObject.forDarkMode ? undefined : themeObject.name }
-        : { light: DEFAULT_THEME }
-    }
-
     const scriptElement = document.currentScript
     if (scriptElement?.tagName === 'SCRIPT') {
       if (scriptElement.classList.length === 0) {
@@ -50,18 +62,23 @@
    *
    * @param {string} tagName - The type of element to create ('script' or 'link').
    * @param {string} src - The source URL for the script or stylesheet.
-   * @param {Function} [success] - Optional callback function to execute when the element is successfully loaded.
+   * @returns {Promise<void>} Promise that resolves when the element is loaded.
    */
   function addElement({ tagName, src }) {
-    const element = document.createElement(tagName)
-    if (tagName === 'link') {
-      element.rel = 'stylesheet'
-      element.href = `${BASE_URL}${src}`
-    } else if (tagName === 'script') {
-      element.defer = true
-      element.src = `${BASE_URL}${src}`
-    }
-    document.body.appendChild(element)
+    return new Promise((resolve, reject) => {
+      const element = document.createElement(tagName)
+      element.onload = () => resolve()
+      element.onerror = () => reject(new Error(`Failed to load ${tagName}: ${src}`))
+      
+      if (tagName === 'link') {
+        element.rel = 'stylesheet'
+        element.href = `${BASE_URL}${src}`
+      } else if (tagName === 'script') {
+        element.defer = true
+        element.src = `${BASE_URL}${src}`
+      }
+      document.body.appendChild(element)
+    })
   }
 
   // Stop Prism from auto-highlighting
@@ -69,7 +86,7 @@
   window.Prism.manual = true
 
   const themes = getThemeOptions()
-  const isDarkMode = window.matchMedia?.('(prefers-color-scheme: dark)').matches
+  const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const coreScriptsToLoad = [
     { tagName: 'link', src: `/themes/${isDarkMode ? themes.dark ?? themes.light : themes.light}.min.css` },
     { tagName: 'link', src: '/plugins/line-numbers/prism-line-numbers.min.css' },
@@ -80,18 +97,25 @@
     { tagName: 'script', src: '/plugins/line-numbers/prism-line-numbers.min.js' }
   ]
 
-  const count = 15 * 60 // ~ roughly 15s
+  // Timeout: 900 cycles at ~60fps = approximately 15 seconds
+  const MAX_LOADING_CYCLES = 900
 
+  /**
+   * Polls for a condition to be met within a timeout period.
+   *
+   * @param {Function} isLoaded - Function that returns true when the condition is met.
+   * @returns {Promise<void>} Promise that resolves when loaded or rejects on timeout.
+   */
   function checkLoadingStatus(isLoaded) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       let cycle = 0
       const loop = () => {
         if (isLoaded()) {
-          res()
+          resolve()
         } else {
           cycle++
-          if (cycle > count) {
-            rej(new Error('Prism failed to load within the expected time.'))
+          if (cycle > MAX_LOADING_CYCLES) {
+            reject(new Error('Prism failed to load within the expected time.'))
           } else {
             requestAnimationFrame(loop)
           }
@@ -104,13 +128,17 @@
   try {
     document.body.classList.add('line-numbers')
 
-    coreScriptsToLoad.forEach(addElement)
+    // Load core scripts sequentially (CSS first, then Prism core)
+    for (const script of coreScriptsToLoad) {
+      await addElement(script)
+    }
     await checkLoadingStatus(() => !!window.Prism?.filename)
 
-    pluginsToLoad.forEach(addElement)
+    // Load plugins in parallel for better performance
+    await Promise.all(pluginsToLoad.map(plugin => addElement(plugin)))
     await checkLoadingStatus(() => !!window.Prism?.plugins?.autoloader)
 
-    Prism.highlightAll()
+    window.Prism.highlightAll()
   } catch (error) {
     console.error('Error loading PrismJS:', error)
   }
