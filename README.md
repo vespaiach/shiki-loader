@@ -7,7 +7,7 @@ A simple, engine-agnostic syntax highlighting loader for web pages. Just include
 Add this single line to your HTML (at the end of your `body` tag):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@v2.0.0/dist/highlight-it.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js" integrity="sha384-zh0jk0z2/k745j30lRgmEzY6xGUxkwsJ4l37MZe1nmQR7yLDhM8n4m+G8ct7ZAyu" crossorigin="anonymous"></script>
 ```
 
 That's it! Your code blocks will be automatically highlighted.
@@ -20,79 +20,62 @@ That's it! Your code blocks will be automatically highlighted.
 - 📦 **Configuration Packs** - Pre-configured setups for different use cases
 - 🎯 **Simple API** - Configure everything via query parameters
 
-## Configuration Packs
+## Configuration
 
-Each highlighting engine defines its own pre-configured packs. Use them to quickly set up highlighting:
+You can configure `highlight-it` by adding query parameters to the script URL. The script supports several configuration options:
 
-### Minimal
+### Configuration Packs
+
+Choose between pre-configured setups optimized for different use cases:
+
+#### Minimal Pack (Default)
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@v2.0.0/dist/highlight-it.js?config=minimal" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?config=minimal" defer></script>
 ```
 - Lightweight setup with no plugins
-- Basic theme
+- Basic Prism theme
+- Ideal for simple use cases
 
-### Complete
+#### Complete Pack
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@v2.0.0/dist/highlight-it.js?config=complete" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?config=complete" defer></script>
 ```
-- Full-featured setup with all plugins
-- Enhanced theme
-- Line numbers, line highlighting, and toolbar
+- Full-featured setup with enhanced plugins
+- Solarized Light / Twilight themes (auto-switching)
+- Line numbers with CSS styling
+- Line highlighting support
+- Auto-loader for language detection
+
+### Query Parameters
+
+All configuration options can be set via query parameters:
+
+| Parameter | Values | Default | Description |
+|-----------|--------|---------|-------------|
+| `config` or `pack` | `minimal`, `complete` | `minimal` | Pre-configured setup pack |
+| `darkmode` or `darkMode` | `true`, `false`, `1`, `0`, `yes`, `no`, `on`, `off` | auto-detect | Enable dark mode theme |
+| `verbose` | `true`, `false`, `1`, `0`, `yes`, `no`, `on`, `off` | `false` | Enable verbose logging |
+
+### Examples
+
+**Complete pack with dark mode:**
+```html
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?config=complete&darkMode=true" defer></script>
+```
+
+**Minimal pack with verbose logging:**
+```html
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?config=minimal&verbose=true" defer></script>
+```
+
+**Auto dark mode detection (default behavior):**
+```html
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?config=complete" defer></script>
+```
+
+When `darkMode` is not specified, the script automatically detects your system's color scheme preference using `prefers-color-scheme`.
 
 **Note:** Each engine (Prism.js, highlight.js, etc.) defines its own minimal and complete configurations optimized for that engine's capabilities.
-
-## Custom Configuration
-
-### Theme Configuration
-
-**Via Query String:**
-```html
-<!-- Single theme for both modes -->
-<script src=".../highlight-it.js?theme=prism-okaidia" defer></script>
-
-<!-- Different themes for light and dark modes -->
-<script src=".../highlight-it.js?theme=light:prism-tomorrow,dark:prism-okaidia" defer></script>
-```
-
-**Via Class Attribute (legacy support):**
-```html
-<!-- Load prism-coy in dark mode, prism-funky in light mode -->
-<script src=".../highlight-it.js" class="dark:prism-coy prism-funky" defer></script>
-```
-
-### Available Themes
-- `prism` (default)
-- `prism-coy`
-- `prism-dark`
-- `prism-funky`
-- `prism-okaidia`
-- `prism-solarizedlight`
-- `prism-tomorrow`
-- `prism-twilight`
-
-### Plugin Configuration
-
-Specify plugins via query string:
-```html
-<script src=".../highlight-it.js?plugins=autoloader,line-numbers" defer></script>
-```
-
-Available plugins include:
-- `autoloader` - Automatically loads language grammars as needed
-- `line-numbers` - Adds line numbers to code blocks
-- `line-highlight` - Highlights specific lines
-- `toolbar` - Adds a toolbar with copy button
-- `command-line` - Adds command line styling
-
-### Advanced Examples
-
-**Complete custom configuration:**
-```html
-<script src=".../highlight-it.js?theme=light:prism-tomorrow,dark:prism-okaidia&plugins=autoloader,line-numbers,toolbar" defer></script>
-```
-
-**Mix pack with overrides:**
-Start with a pack and customize specific options by using query parameters together.
 
 ## How It Works
 
@@ -111,22 +94,8 @@ While currently powered by Prism.js, `highlight-it` is designed with an engine a
 
 Future versions may support additional engines via the `engine` parameter:
 ```html
-<script src=".../highlight-it.js?engine=prism&config=modern" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?engine=prism&config=modern" defer></script>
 ```
-
-## Migration from prismjs-loader
-
-If you're upgrading from `prismjs-loader`:
-
-1. **Update the script URL:**
-   - Old: `prismjs-loader@v1.0.1/dist/prismjs-loader.js`
-   - New: `highlight-it@v2.0.0/dist/highlight-it.js`
-
-2. **Configuration is now hidden:** You no longer need to know about Prism.js specifics
-
-3. **Use configuration packs:** Instead of manually configuring, use `?config=modern` or similar
-
-4. **Class-based themes still work:** Legacy syntax is supported for backward compatibility
 
 ## Browser Support
 
