@@ -24,12 +24,15 @@
   "main": "highlight-it.js",
   "scripts": {
     "test": "http-server",
+    "docs": "overmind s",
     "build": "bun build highlight-it.ts --outdir ./dist/ --target browser --bundle --minify",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch"
   },
   "dependencies": {
-    "http-server": "^14.1.1"
+    "@tailwindcss/cli": "^4.1.18",
+    "http-server": "^14.1.1",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",
