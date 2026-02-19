@@ -25,7 +25,7 @@
     "scripts": {
         "test": "http-server",
         "docs": "overmind s",
-        "build": "bun build highlight-it.ts --outdir ./dist/ --target browser --bundle --minify",
+        "build": "VERSION=$(bun -e \"console.log(require('./package.json').version)\") && bun build highlight-it.ts --outfile ./dist/highlight-it.js --target browser --bundle --minify && cp ./dist/highlight-it.js ./dist/highlight-it-$VERSION.js && rm ./dist/highlight-it.js",
         "type-check": "tsc --noEmit",
         "type-check:watch": "tsc --noEmit --watch"
     },

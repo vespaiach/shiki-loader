@@ -598,7 +598,7 @@ func main() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const theme = urlParams.get('theme') || 'one-dark';
                 const script = document.createElement('script');
-                script.src = `../../dist/highlight-it.js?theme=${theme}&verbose=true`;
+                script.src = `../../dist/highlight-it-2.0.0.js?theme=${theme}&verbose=true`;
                 document.currentScript.parentNode.insertBefore(script, document.currentScript.nextSibling);
             })();
         </script>

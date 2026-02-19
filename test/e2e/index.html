@@ -217,7 +217,7 @@
             <h3>Show me the code please! I am in rush</h3>
             <div class="info-box">
                 <strong>Let's copy the below script and put it in your HTML to use the library:</strong>
-                <pre><code>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js&quot;
+                <pre><code>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js&quot;
                     integrity=&quot;sha384-zh0jk0z2/k745j30lRgmEzY6xGUxkwsJ4l37MZe1nmQR7yLDhM8n4m+G8ct7ZAyu&quot;
                     crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;</code></pre>
             </div>
@@ -734,7 +734,7 @@ func main() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const theme = urlParams.get('theme') || 'one-dark';
                 const script = document.createElement('script');
-                script.src = `https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?theme=${theme}&verbose=true`;
+                script.src = `https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=${theme}&verbose=true`;
                 document.currentScript.parentNode.insertBefore(script, document.currentScript.nextSibling);
             })();
         </script>

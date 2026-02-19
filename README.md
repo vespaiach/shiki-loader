@@ -7,7 +7,7 @@ A simple, engine-agnostic syntax highlighting loader for web pages. Just include
 Add this single line to your HTML (at the end of your `body` tag):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js" integrity="sha384-zh0jk0z2/k745j30lRgmEzY6xGUxkwsJ4l37MZe1nmQR7yLDhM8n4m+G8ct7ZAyu" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js" integrity="sha384-zh0jk0z2/k745j30lRgmEzY6xGUxkwsJ4l37MZe1nmQR7yLDhM8n4m+G8ct7ZAyu" crossorigin="anonymous"></script>
 ```
 
 That's it! Your code blocks will be automatically highlighted.
@@ -52,24 +52,24 @@ Every installation includes these plugins automatically:
 
 **Default setup (prism theme with all plugins):**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js" defer></script>
 ```
 
 **Custom theme:**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?theme=dracula" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=dracula" defer></script>
 ```
 
 **Auto dark mode with different themes:**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?theme=one-light&darkMode=one-dark" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=one-light&darkMode=one-dark" defer></script>
 ```
 
 When `darkMode` parameter is provided, the script automatically switches themes based on your system's `prefers-color-scheme` setting.
 
 **Enable verbose logging:**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?theme=vsc-dark-plus&verbose=true" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=vsc-dark-plus&verbose=true" defer></script>
 ```
 
 ## How It Works
@@ -89,7 +89,7 @@ While currently powered by Prism.js, `highlight-it` is designed with an engine a
 
 Future versions may support additional engines via the `engine` parameter:
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it.js?engine=prism&config=modern" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?engine=prism&config=modern" defer></script>
 ```
 
 ## Browser Support

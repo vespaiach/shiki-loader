@@ -58,7 +58,20 @@ export function appendToBody(resource: { tagName: 'script' | 'link'; src: string
 }
 
 export function parseScriptParams() {
-    const scriptElement = document.currentScript;
+    let scriptElement = document.currentScript as HTMLScriptElement;
+
+    // Fallback for dynamically added scripts where currentScript might be null
+    if (!scriptElement || scriptElement.nodeName !== 'SCRIPT') {
+        const scripts = document.getElementsByTagName('script');
+        // Try to find the script by looking for the one that likely is us
+        for (let i = scripts.length - 1; i >= 0; i--) {
+            const s = scripts[i];
+            if (s.src && (s.src.includes('highlight-it-') || s.src.includes('highlight-it@') || s.src.endsWith('highlight-it.js'))) {
+                scriptElement = s;
+                break;
+            }
+        }
+    }
 
     // Default configuration
     const config: EngineInputs & { verbose: boolean } = {
@@ -69,7 +82,7 @@ export function parseScriptParams() {
     };
 
     // Parse URL parameters if script element is available
-    if (scriptElement && scriptElement instanceof HTMLScriptElement && scriptElement.src) {
+    if (scriptElement && scriptElement.src) {
         try {
             const url = new URL(scriptElement.src);
 
