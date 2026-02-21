@@ -3,20 +3,20 @@ import type { EngineInputs } from './type';
 /**
  * Logger utility that respects verbose configuration
  */
-let verboseMode = false;
+window.__verboseMode = false;
 
 export function setVerbose(enabled: boolean): void {
-    verboseMode = enabled;
+    window.__verboseMode = enabled;
 }
 
 export function log(...args: unknown[]): void {
-    if (verboseMode) {
+    if (window.__verboseMode) {
         console.log('[highlight-it LOG]: ', ...args);
     }
 }
 
 export function warn(...args: unknown[]): void {
-    if (verboseMode) {
+    if (window.__verboseMode) {
         console.warn('[highlight-it WARN]: ', ...args);
     }
 }
@@ -82,7 +82,7 @@ export function parseScriptParams() {
     };
 
     // Parse URL parameters if script element is available
-    if (scriptElement && scriptElement.src) {
+    if (scriptElement?.src) {
         try {
             const url = new URL(scriptElement.src);
 
@@ -99,8 +99,8 @@ export function parseScriptParams() {
             // Get pack parameter (config or pack)
             config.theme = url.searchParams.get('theme') || url.searchParams.get('config') || 'prism';
 
-            // Get darkmode parameter
-            config.darkMode = url.searchParams.get('darkmode') || url.searchParams.get('darkMode');
+            // Get darkmode parameter (supports kebab-case 'dark-theme' as primary, also 'dark-mode' and legacy camelCase)
+            config.darkMode = url.searchParams.get('dark-theme') || url.searchParams.get('dark-mode') || url.searchParams.get('darkmode') || url.searchParams.get('darkMode');
 
             // Get verbose parameter
             const verboseParam = url.searchParams.get('verbose');

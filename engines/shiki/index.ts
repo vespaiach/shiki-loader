@@ -3,6 +3,15 @@ import config from '@/engines/shiki/config.yaml';
 import type { EngineInputs } from '@/type';
 import { log, error as logError } from '@/utils';
 
+interface ShikiConfig {
+    url: string;
+    themes: string[];
+}
+
+const shikiConfig = config as ShikiConfig;
+
+export const supportedThemes = shikiConfig.themes;
+
 /**
  * Shiki Engine
  * Syntax highlighting engine powered by Shiki
@@ -17,13 +26,13 @@ export default class ShikiEngine extends BaseEngine {
         super();
         this.theme = inputs.theme || 'vitesse-light';
         this.darkModeTheme = inputs.darkMode || 'vitesse-dark';
-        log('Shiki Engine loaded with config:', config);
+        log('Shiki Engine loaded with config:', shikiConfig);
     }
 
     async initialize() {
         try {
             // Dynamically import shiki from CDN
-            const shiki = await import(/* @lite-ignore */ config.url);
+            const shiki = await import(/* @lite-ignore */ shikiConfig.url);
 
             this.highlighter = await shiki.createHighlighter({
                 themes: [this.theme, this.darkModeTheme],
@@ -86,3 +95,4 @@ export default class ShikiEngine extends BaseEngine {
         }
     }
 }
+

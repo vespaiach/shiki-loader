@@ -7,6 +7,7 @@
 declare global {
     interface Window {
         __highlightItInitialized?: boolean;
+        __verboseMode?: boolean;
         Prism?: {
             manual: boolean;
             filename?: string;

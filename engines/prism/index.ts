@@ -1,7 +1,14 @@
 import BaseEngine from '@/engines/base';
 import config from '@/engines/prism/config.yaml';
-import type { EngineInputs, PluginResource, Resource } from '@/type';
+import type { EngineConfig, EngineInputs, PluginResource, Resource } from '@/type';
 import { assertString, log, error as logError, warn } from '@/utils';
+
+const prismConfig = config as EngineConfig;
+
+export const supportedThemes = [
+    ...Object.keys(prismConfig.builtIn.themes),
+    ...(prismConfig.external ? Object.keys(prismConfig.external.themes) : []),
+];
 
 /**
  * Prism.js Engine
@@ -14,7 +21,7 @@ export default class PrismEngine extends BaseEngine {
         super();
         const { theme, darkMode } = inputs;
 
-        log('Loaded config:', config);
+        log('Loaded config:', prismConfig);
         this.setTheme(theme, darkMode || '');
         this.setPlugins();
     }
@@ -33,7 +40,7 @@ export default class PrismEngine extends BaseEngine {
 
         try {
             // Add core script
-            await load({ script: `${config.builtIn.urlPrefix}/components/prism-core.min.js` });
+            await load({ script: `${prismConfig.builtIn.urlPrefix}/components/prism-core.min.js` });
             log('Core script loaded.');
 
             // Load all resources
@@ -47,49 +54,56 @@ export default class PrismEngine extends BaseEngine {
 
     setTheme(theme: string, darkMode: string) {
         const addBuiltInResource = (src: string) => {
-            this.resources.push({ link: `${config.builtIn.urlPrefix}${src}` });
+            this.resources.push({ link: `${prismConfig.builtIn.urlPrefix}${src}` });
         };
         const addExternalResource = (src: string) => {
-            this.resources.push({ link: `${config.external.urlPrefix}${src}` });
+            if (!prismConfig.external) return;
+            this.resources.push({ link: `${prismConfig.external.urlPrefix}${src}` });
         };
 
         const isDarkMode = Boolean(darkMode) && window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-        if (isDarkMode && config.builtIn.themes[darkMode]) {
-            addBuiltInResource(config.builtIn.themes[darkMode]);
+        if (isDarkMode && prismConfig.builtIn.themes[darkMode]) {
+            addBuiltInResource(prismConfig.builtIn.themes[darkMode]);
             log(`[Prism Engine] Dark mode theme "${darkMode}" applied based on system preference.`);
             return;
         }
-        if (!isDarkMode && config.builtIn.themes[theme]) {
-            addBuiltInResource(config.builtIn.themes[theme]);
+        if (!isDarkMode && prismConfig.builtIn.themes[theme]) {
+            addBuiltInResource(prismConfig.builtIn.themes[theme]);
             log(`[Prism Engine] Theme "${theme}" applied based on system preference.`);
             return;
         }
-        if (!isDarkMode && config.external.themes[theme]) {
-            addExternalResource(config.external.themes[theme]);
+        if (!isDarkMode && prismConfig.external?.themes[theme]) {
+            addExternalResource(prismConfig.external.themes[theme]);
             log(`[Prism Engine] External theme "${theme}" applied based on system preference.`);
             return;
         }
-        if (isDarkMode && config.external.themes[darkMode]) {
-            addExternalResource(config.external.themes[darkMode]);
+        if (isDarkMode && prismConfig.external?.themes[darkMode]) {
+            addExternalResource(prismConfig.external.themes[darkMode]);
             log(`[Prism Engine] External dark mode theme "${darkMode}" applied based on system preference.`);
             return;
         }
 
-        addBuiltInResource(config.builtIn.themes.prism);
+        addBuiltInResource(prismConfig.builtIn.themes.prism);
         warn(`[Prism Engine] Theme "${theme}" is not supported.`);
     }
 
     setPlugins() {
         // Add plugin
-        config.builtIn.plugins?.forEach((plugin: PluginResource) => {
+        prismConfig.builtIn.plugins?.forEach((plugin: PluginResource) => {
             this.resources.push({
                 script: assertString(plugin.script)
-                    ? `${config.builtIn.urlPrefix}${plugin.script}`
+                    ? `${prismConfig.builtIn.urlPrefix}${plugin.script}`
                     : undefined,
-                link: assertString(plugin.link) ? `${config.builtIn.urlPrefix}${plugin.link}` : undefined,
+                link: assertString(plugin.link)
+                    ? `${prismConfig.builtIn.urlPrefix}${plugin.link}`
+                    : undefined,
                 dependencies: plugin.dependencies?.map((dep: PluginResource) => ({
-                    script: assertString(dep.script) ? `${config.builtIn.urlPrefix}${dep.script}` : undefined,
-                    link: assertString(dep.link) ? `${config.builtIn.urlPrefix}${dep.link}` : undefined,
+                    script: assertString(dep.script)
+                        ? `${prismConfig.builtIn.urlPrefix}${dep.script}`
+                        : undefined,
+                    link: assertString(dep.link)
+                        ? `${prismConfig.builtIn.urlPrefix}${dep.link}`
+                        : undefined,
                 })),
             });
         });

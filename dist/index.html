@@ -8,6 +8,204 @@
             name="description"
             content="highlight-it is a modern syntax highlighting loader for web applications, supporting multiple engines and themes with dynamic loading and dark mode support." >
         <link rel="stylesheet" href="./main.css" >
+        <script>
+            var prismThemes = [
+                'a11y-dark',
+                'atom-dark',
+                'base16-ateliersulphurpool.light',
+                'cb',
+                'coldark-cold',
+                'coldark-dark',
+                'coy',
+                'coy-without-shadows',
+                'darcula',
+                'dark',
+                'dracula',
+                'duotone-dark',
+                'duotone-earth',
+                'duotone-forest',
+                'duotone-light',
+                'duotone-sea',
+                'duotone-space',
+                'funky',
+                'ghcolors',
+                'gruvbox-dark',
+                'gruvbox-light',
+                'holi-theme',
+                'hopscotch',
+                'laserwave',
+                'lucario',
+                'material-dark',
+                'material-light',
+                'material-oceanic',
+                'night-owl',
+                'nord',
+                'okaidia',
+                'one-dark',
+                'one-light',
+                'pojoaque',
+                'prism',
+                'shades-of-purple',
+                'solarized-dark-atom',
+                'solarizedlight',
+                'synthwave84',
+                'tomorrow',
+                'twilight',
+                'vs',
+                'vsc-dark-plus',
+                'xonokai',
+                'z-touch',
+            ];
+            var highlightThemes = [
+                '1c-light',
+                'a11y-dark',
+                'a11y-light',
+                'agate',
+                'an-old-hope',
+                'androidstudio',
+                'arduino-light',
+                'arta',
+                'ascetic',
+                'atom-one-dark',
+                'atom-one-dark-reasonable',
+                'atom-one-light',
+                'brown-paper',
+                'codepen-embed',
+                'color-brewer',
+                'cybertopia-cherry',
+                'cybertopia-dimmer',
+                'cybertopia-icecap',
+                'cybertopia-saturated',
+                'dark',
+                'default',
+                'devibeans',
+                'docco',
+                'dracula',
+                'far',
+                'felipec',
+                'foundation',
+                'github',
+                'github-dark',
+                'github-dark-dimmed',
+                'gml',
+                'googlecode',
+                'gradient-dark',
+                'gradient-light',
+                'grayscale',
+                'hybrid',
+                'idea',
+                'intellij-light',
+                'ir-black',
+                'isbl-editor-dark',
+                'isbl-editor-light',
+                'kimbie-dark',
+                'kimbie-light',
+                'lightfair',
+                'lioshi',
+                'magula',
+                'mono-blue',
+                'monokai',
+                'monokai-sublime',
+                'night-owl',
+                'nnfx-dark',
+                'nnfx-light',
+                'nord',
+                'obsidian',
+                'panda-syntax-dark',
+                'panda-syntax-light',
+                'paraiso-dark',
+                'paraiso-light',
+                'pojoaque',
+                'purebasic',
+                'qtcreator-dark',
+                'qtcreator-light',
+                'rainbow',
+                'rose-pine',
+                'rose-pine-dawn',
+                'rose-pine-moon',
+                'routeros',
+                'school-book',
+                'shades-of-purple',
+                'srcery',
+                'stackoverflow-dark',
+                'stackoverflow-light',
+                'sunburst',
+                'tokyo-night-dark',
+                'tokyo-night-light',
+                'tomorrow-night-blue',
+                'tomorrow-night-bright',
+                'vs',
+                'vs2015',
+                'xcode',
+                'xt256',
+            ];
+            var shikiThemes = [
+                'andromeeda',
+                'aurora-x',
+                'ayu-dark',
+                'ayu-light',
+                'ayu-mirage',
+                'catppuccin-frappe',
+                'catppuccin-latte',
+                'catppuccin-macchiato',
+                'catppuccin-mocha',
+                'dark-plus',
+                'dracula',
+                'dracula-soft',
+                'everforest-dark',
+                'everforest-light',
+                'github-dark',
+                'github-dark-default',
+                'github-dark-dimmed',
+                'github-dark-high-contrast',
+                'github-light',
+                'github-light-default',
+                'github-light-high-contrast',
+                'gruvbox-dark-hard',
+                'gruvbox-dark-medium',
+                'gruvbox-dark-soft',
+                'gruvbox-light-hard',
+                'gruvbox-light-medium',
+                'gruvbox-light-soft',
+                'horizon',
+                'houston',
+                'kanagawa-dragon',
+                'kanagawa-lotus',
+                'kanagawa-wave',
+                'laserwave',
+                'light-plus',
+                'material-theme',
+                'material-theme-darker',
+                'material-theme-lighter',
+                'material-theme-ocean',
+                'material-theme-palenight',
+                'min-dark',
+                'min-light',
+                'monokai',
+                'night-owl',
+                'night-owl-light',
+                'nord',
+                'one-dark-pro',
+                'one-light',
+                'plastic',
+                'poimandres',
+                'red',
+                'rose-pine',
+                'rose-pine-dawn',
+                'rose-pine-moon',
+                'slack-dark',
+                'slack-ochin',
+                'snazzy-light',
+                'solarized-dark',
+                'solarized-light',
+                'synthwave-84',
+                'tokyo-night',
+                'vesper',
+                'vitesse-black',
+                'vitesse-dark',
+                'vitesse-light',
+            ];
+        </script>
     </head>
 
     <body class="bg-base-100 text-base-content">
@@ -62,7 +260,7 @@
                             stroke-linejoin="round">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
-                        <input type="checkbox" value="dark" class="ml-2 toggle theme-controller" />
+                        <input type="checkbox" value="dark" class="ml-2 toggle theme-controller" >
                     </label>
                 </div>
 
@@ -74,9 +272,9 @@
                 <fieldset class="fieldset border-base-300 rounded-lg w-full border p-4">
                     <legend class="fieldset-legend">Customization</legend>
 
-                    <fieldset class="fieldset">
+                    <fieldset class="fieldset ">
                         <legend class="fieldset-legend">Engine</legend>
-                        <select class="select">
+                        <select id="engine-select" class="select w-full">
                             <option selected value="shiki">Shiki</option>
                             <option value="prism">Prism</option>
                             <option value="highlight">Highlight.js</option>
@@ -85,22 +283,35 @@
 
                     <fieldset class="fieldset">
                         <legend class="fieldset-legend">Theme</legend>
-                        <select class="select">
+                        <select id="theme-select" class="select w-full">
                             <option disabled selected>Pick a theme</option>
-                            <option>Light</option>
-                            <option>Dark</option>
-                            <option>System</option>
                         </select>
                     </fieldset>
 
                     <fieldset class="fieldset">
                         <legend class="fieldset-legend">Dark theme</legend>
-                        <select class="select">
-                            <option>Chrome</option>
-                            <option>FireFox</option>
-                            <option>Safari</option>
+                        <select id="dark-theme-select" class="select w-full">
+                            <option disabled selected>Pick a dark theme</option>
                         </select>
                     </fieldset>
+
+                    <button id="refresh-btn" class="btn btn-primary mt-4 w-full">
+                        Refresh
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
                 </fieldset>
             </div>
 
@@ -143,5 +354,163 @@ print(f"Loading {merged['engine']} engine...")</code></pre>
                 </div>
             </div>
         </main>
+        <script>
+            // Auto reload theme selects based on engine selection
+            (() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const engineParam = urlParams.get('engine');
+                const themeParam = urlParams.get('theme');
+                const darkThemeParam = urlParams.get('dark-theme');
+
+                const engineSelect = document.getElementById('engine-select');
+                const themeSelect = document.getElementById('theme-select');
+                const darkThemeSelect = document.getElementById('dark-theme-select');
+                const refreshBtn = document.getElementById('refresh-btn');
+
+                const themeMap = {
+                    shiki: [], // Shiki themes are dynamic/loaded differently or just list them if available
+                    prism: prismThemes,
+                    highlight: highlightThemes,
+                };
+
+                // Add Shiki themes to map if they exist in the page context
+                if (typeof shikiThemes !== 'undefined') {
+                    themeMap.shiki = shikiThemes;
+                }
+
+                function populateSelect(select, themes) {
+                    // Clear existing options except the first placeholder
+                    while (select.options.length > 1) {
+                        select.remove(1);
+                    }
+
+                    if (!themes) return;
+
+                    themes.forEach((theme) => {
+                        const option = document.createElement('option');
+                        option.value = theme;
+                        option.text = theme;
+                        select.add(option);
+                    });
+                }
+
+                function updateThemeOptions() {
+                    const engine = engineSelect.value;
+                    const themes = themeMap[engine] || [];
+
+                    populateSelect(themeSelect, themes);
+                    populateSelect(darkThemeSelect, themes);
+                }
+
+                function getScriptSrcFromParams() {
+                    const engine = urlParams.get('engine');
+                    const theme = urlParams.get('theme');
+                    const darkTheme = urlParams.get('dark-theme');
+
+                    const params = [];
+                    if (engine) params.push(`engine=${encodeURIComponent(engine)}`);
+                    if (theme) params.push(`theme=${encodeURIComponent(theme)}`);
+                    if (darkTheme) params.push(`dark-theme=${encodeURIComponent(darkTheme)}`);
+
+                    if (params.length === 0) {
+                        return './highlight-it.js';
+                    }
+                    return `./highlight-it.js?${params.join('&')}`;
+                }
+
+                function loadScript(src) {
+                    // Remove existing highlight-it scripts to avoid duplicates/conflicts
+                    document.querySelectorAll('script[src*="highlight-it.js"]').forEach((s) => {
+                        s.remove();
+                    });
+
+                    // Reset initialization flag if it exists (from highlight-it internal logic)
+                    if (window.__highlightItInitialized) {
+                        window.__highlightItInitialized = false;
+                    }
+
+                    const script = document.createElement('script');
+                    script.src = src;
+                    script.defer = true;
+                    document.body.appendChild(script);
+                }
+
+                function refreshPage() {
+                    const engine = engineSelect.value;
+                    const theme = themeSelect.value;
+                    const darkTheme = darkThemeSelect.value;
+
+                    const newParams = new URLSearchParams();
+                    newParams.set('engine', engine);
+
+                    // Use selectedIndex to reliably check if a theme is picked (index 0 is placeholder)
+                    if (themeSelect.selectedIndex > 0) {
+                        newParams.set('theme', theme);
+                    }
+
+                    if (darkThemeSelect.selectedIndex > 0) {
+                        newParams.set('dark-theme', darkTheme);
+                    }
+
+                    window.location.search = newParams.toString();
+                }
+
+                if (engineSelect && themeSelect && darkThemeSelect) {
+                    // 1. Set initial values from Query Params if present
+                    if (engineParam && ['shiki', 'prism', 'highlight'].includes(engineParam)) {
+                        engineSelect.value = engineParam;
+                    } else {
+                        // Default to Prism if no param
+                        engineSelect.value = 'prism';
+                    }
+
+                    // Update options based on the engine (whether from param or default)
+                    updateThemeOptions();
+
+                    // Set themes if params present
+                    if (themeParam) {
+                        // Check if theme exists in options
+                        const opts = Array.from(themeSelect.options).map((o) => o.value);
+                        if (opts.includes(themeParam)) {
+                            themeSelect.value = themeParam;
+                        }
+                    }
+
+                    if (darkThemeParam) {
+                        // If it's a theme name, select it in the dropdown
+                        const opts = Array.from(darkThemeSelect.options).map((o) => o.value);
+                        if (opts.includes(darkThemeParam)) {
+                            darkThemeSelect.value = darkThemeParam;
+                            // And imply manual dark mode override
+                            document.querySelector('.theme-controller').checked = true;
+                        } else if (darkThemeParam === 'true' || darkThemeParam === '1') {
+                            // Just enable toggle without selecting specific theme (use default 'Pick a dark theme' or similar)
+                            document.querySelector('.theme-controller').checked = true;
+                        }
+                    }
+
+                    // 2. Add event listeners
+                    engineSelect.addEventListener('change', () => {
+                        updateThemeOptions();
+                        // Removing dynamic loadScript call
+                    });
+
+                    // If user selects a dark theme explicitly, turn ON the dark mode toggle automatically
+                    darkThemeSelect.addEventListener('change', () => {
+                        if (darkThemeSelect.selectedIndex > 0) {
+                            document.querySelector('.theme-controller').checked = true;
+                        }
+                    });
+
+                    if (refreshBtn) {
+                        refreshBtn.addEventListener('click', refreshPage);
+                    }
+
+                    // 3. Initial Load
+                    // Construct the src directly from URL params
+                    loadScript(getScriptSrcFromParams());
+                }
+            })();
+        </script>
     </body>
 </html>
