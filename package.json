@@ -13,8 +13,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@next/third-parties": "^16.1.6",
     "daisyui": "^5.5.19",
-    "next": "16.1.6",
+    "next": "^16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

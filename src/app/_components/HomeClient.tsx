@@ -7,6 +7,7 @@ import Info from "@/components/icons/Info";
 import Refresh from "@/components/icons/Refresh";
 import Select from "@/components/Select";
 import { SHIKI_THEMES } from "@/shiki-loader/themes";
+import HowItWorks from "./HowItWorks";
 
 export default function HomeClient() {
   const ranRef = useRef(false);
@@ -61,8 +62,8 @@ export default function HomeClient() {
 
   return (
     <>
-      <main className="flex flex-row justify-stretch min-h-screen">
-        <div className="flex-2 bg-base-200 text-base-content px-8 pt-3 pb-4 min-w-80">
+      <main className="flex flex-col md:flex-row justify-stretch min-h-screen">
+        <div className="md:flex-2 flex-1 bg-base-200 text-base-content px-8 pt-3 min-w-80 pb-10">
           <div className="flex items-center justify-end gap-2">
             <button
               className="btn btn-ghost btn-circle btn-sm"
@@ -82,7 +83,7 @@ export default function HomeClient() {
             </a>
           </div>
 
-          <h1 className="text-center text-3xl mt-8 text-primary font-semibold leading-none">Shiki Loader</h1>
+          <h1 className="text-center text-3xl mt-8 mb-3 text-primary font-semibold leading-none">Shiki Loader</h1>
           <p className="text-center text-sm mb-12 font-normal">
             The effortless way to highlight your code snippets.
           </p>
@@ -131,7 +132,7 @@ export default function HomeClient() {
           </fieldset>
         </div>
 
-        <div className="flex-6 py-8 px-12 flex flex-col gap-6">
+        <div className="flex-1 md:flex-6 py-8 px-12 flex flex-col gap-6">
           <h2 className="font-semibold">Live Preview</h2>
           <div id="the-script" className={highlightHtmlCode ? "bounce-in-top" : ""}>
             <pre>
@@ -167,30 +168,7 @@ class HighlightingEngine:
         </div>
       </main>
 
-      <dialog id="how-it-works" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-xl">How It Works</h3>
-          <p className="py-4 text-sm leading-relaxed">
-            <strong>shiki-loader</strong> is a tiny, copy-and-paste script that loads the
-            Shiki syntax-highlighting engine for you—no integration
-            headaches. It pulls <a href="https://shiki.style/">Shiki</a> from the esm.sh CDN, automatically
-            finds all <code>&lt;pre&gt;&lt;code&gt;</code> blocks with classes like
-            <code>language-*</code>, and asks Shiki to highlight them. You
-            choose the theme via search parameters on the script URL.
-          </p>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn" type="submit">
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button type="submit">close</button>
-        </form>
-      </dialog>
+      <HowItWorks />
     </>
   );
 }
