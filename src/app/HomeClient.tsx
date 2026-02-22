@@ -47,7 +47,7 @@ export default function HomeClient() {
       });
 
       const script = document.createElement("script");
-      let src = `/shiki-loader.js?theme=${theme}`;
+      let src = `https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js?theme=${theme}`;
       if (darkTheme) {
         src += `&dark-theme=${darkTheme}`;
       }
@@ -63,8 +63,8 @@ export default function HomeClient() {
       <div className="flex-2 bg-base-200 text-base-content px-8 pt-3 pb-4 min-w-80">
         <div className="flex items-center justify-end gap-2">
           <a
-            href="https://github.com/vespaiach/highlight-it"
-            title="Highlight-it Github Repository"
+            href="https://github.com/vespaiach/shiki-loader"
+            title="Shiki Loader Github Repository"
             target="_blank"
             className="btn btn-circle btn-sm btn-ghost text-base-content"
             rel="noopener noreferrer">

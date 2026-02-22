@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "highlight-it",
+      "name": "shiki-loader",
       "dependencies": {
         "daisyui": "^5.5.19",
         "next": "16.1.6",

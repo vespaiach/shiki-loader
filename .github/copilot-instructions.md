@@ -1,4 +1,4 @@
-# Copilot Instructions for highlight-it
+# Copilot Instructions for shiki-loader
 
 ## Project Overview
 
