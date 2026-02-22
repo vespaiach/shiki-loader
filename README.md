@@ -1,123 +1,105 @@
-# highlight-it
+# shiki-loader 
 
-A simple, engine-agnostic syntax highlighting loader for web pages. Just include one script and you're done - no need to know what highlighting engine is being used under the hood.
+Browser-only syntax highlighting for code blocks using [Shiki](https://shiki.style/).
 
-## Quick Start
+This repo contains two pieces:
 
-Add this single line to your HTML (at the end of your `body` tag):
+- `shiki-loader`: a standalone browser script that finds `pre code` blocks on the page and highlights them with Shiki
+- A small Next.js demo app that showcases the loader and available themes
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/highlight-it@1.0.0/dist/highlight-it.js"></script>
+## Quick Start (CDN script)
+
+1. Build the loader (if you're working from this repo):
+
+```bash
+bun run build:lib
 ```
 
-That's it! Your code blocks will be automatically highlighted.
+This produces `public/shiki-loader.js`.
 
-## Features
+2. Include the script at the end of your HTML `body`:
 
-- 🚀 **Zero Configuration** - Works out of the box with sensible defaults
-- 🎨 **Multiple Themes** - Built-in light and dark mode support
-- 🔌 **Engine Agnostic** - Support for Prism.js, Highlight.js, and Shiki engines
-- 📦 **Configuration Packs** - Pre-configured setups for different use cases
-- 🎯 **Simple API** - Configure everything via query parameters
+```html
+<script src="/shiki-loader.js" defer></script>
+```
 
-## Configuration
+All `pre code` blocks with a language class (for example `language-ts`, `lang-js`) will be highlighted automatically on page load.
 
-You can configure `highlight-it` by adding query parameters to the script URL.
+## Script Configuration
+
+The loader is configured entirely via URL query parameters on the script `src`.
 
 ### Query Parameters
 
-| Parameter | Values | Default | Description |
-|-----------|--------|---------|-------------|
-| `engine` | `prism`, `highlight`, `shiki` | `prism` | Highlighting engine to use |
-| `theme` or `config` | See [Available Themes](#available-themes) | `prism` | Theme for light mode or single theme |
-| `darkmode` or `darkMode` | See [Available Themes](#available-themes) | _(auto-detect)_ | Theme for dark mode (requires system dark mode) |
-| `verbose` | `true`, `false`, `1`, `0`, `yes`, `no`, `on`, `off` | `false` | Enable console logging for debugging |
+| Parameter     | Values                        | Default          | Description                                     |
+|--------------|-------------------------------|------------------|-------------------------------------------------|
+| `theme`      | Any bundled Shiki theme name  | `material-theme` | Base theme used in light and dark mode         |
+| `dark-theme` | Any bundled Shiki theme name  | _(none)_         | Optional dark theme, used if system is in dark |
 
-### Default Features
+The script automatically detects dark mode using `prefers-color-scheme: dark`. If `dark-theme` is provided and the system is in dark mode, that theme is used; otherwise `theme` is used.
 
-Every installation includes these plugins automatically:
-- **Autoloader** - Automatic language detection and loading
-- **Line Numbers** - Displays line numbers with CSS styling
-- **Line Highlight** - Highlights specific lines
-- **Copy to Clipboard** - Copy button with toolbar
+### Example Usage
 
-### Available Themes
-
-#### Built-in Themes (Prism CDN)
-`prism` (default), `coy`, `dark`, `funky`, `okaidia`, `solarizedlight`, `tomorrow`, `twilight`
-
-#### External Themes (Prism Themes CDN)
-`a11y-dark`, `atom-dark`, `base16-ateliersulphurpool.light`, `cb`, `coldark-cold`, `coldark-dark`, `coy-without-shadows`, `darcula`, `dracula`, `duotone-dark`, `duotone-earth`, `duotone-forest`, `duotone-light`, `duotone-sea`, `duotone-space`, `ghcolors`, `gruvbox-dark`, `gruvbox-light`, `holi-theme`, `hopscotch`, `laserwave`, `lucario`, `material-dark`, `material-light`, `material-oceanic`, `night-owl`, `nord`, `one-dark`, `one-light`, `pojoaque`, `shades-of-purple`, `solarized-dark-atom`, `synthwave84`, `vs`, `vsc-dark-plus`, `xonokai`, `z-touch`
-
-#### Highlight.js Themes
-Supports all standard Highlight.js themes including: `atom-one-dark`, `atom-one-light`, `github`, `monokai`, `nord`, `tokyo-night-dark`, `vs2015`, etc.
-
-#### Shiki Themes
-Supports over 60 bundled themes including: `github-dark`, `github-light`, `nord`, `one-dark-pro`, `dracula`, `material-theme`, `catppuccin-mocha`, `rose-pine`, etc.
-
-### Examples
-
-**Default setup (prism theme with all plugins):**
-```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js" defer></script>
-```
-
-**Custom theme:**
-```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=dracula" defer></script>
-```
-
-**Auto dark mode with different themes:**
-```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=one-light&darkMode=one-dark" defer></script>
-```
-
-When `darkMode` parameter is provided, the script automatically switches themes based on your system's `prefers-color-scheme` setting.
-
-**Enable verbose logging:**
-```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?theme=vsc-dark-plus&verbose=true" defer></script>
-```
-
-## How It Works
-
-1. The script loads after your page renders (via `defer` attribute)
-2. Configuration is parsed from query parameters or class attributes
-3. The appropriate highlighting engine resources are loaded (themes, plugins, etc.)
-4. Code blocks in your page are automatically highlighted
-5. All requests happen after page load, so SEO is not affected
-
-## Engine Architecture
-
-`highlight-it` is designed with an engine abstraction layer that supports multiple highlighting engines:
-
-- [**Prism.js**](https://prismjs.com/) (Default): Fast and lightweight.
-- [**Highlight.js**](https://highlightjs.org/): Popular with broad language support.
-- [**Shiki**](https://shiki.style/): Ultra-accurate, powered by the same engine as VS Code.
-
-You can switch engines via the `engine` parameter:
+Use the same theme in both light and dark mode:
 
 ```html
-<!-- Use Shiki engine -->
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?engine=shiki&theme=github-dark" defer></script>
-
-<!-- Use Highlight.js engine -->
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/highlight-it@main/dist/highlight-it-2.0.0.js?engine=highlight&theme=atom-one-dark" defer></script>
+<script src="/shiki-loader.js?theme=github-dark" defer></script>
 ```
 
-## Browser Support
+Use different themes for light and dark mode:
 
-- Chrome 58+
-- Edge 58+
-- Firefox 58+
-- Safari 13+
+```html
+<script src="/shiki-loader.js?theme=github-light&dark-theme=github-dark" defer></script>
+```
+
+## Supported Languages
+
+The loader ships with all Shiki bundled languages. A block is highlighted when:
+
+- It is inside a `pre` element
+- The `code` element has a class starting with `language-` or `lang-` (for example `language-ts`, `lang-js`)
+- The language is part of Shiki's `bundledLanguages`
+
+If the language is not supported, a warning is logged and the block is left unchanged.
+
+## Bundled Themes
+
+The loader exposes all Shiki bundled themes; common examples include:
+
+- `github-dark`, `github-light`
+- `one-dark-pro`, `one-light`
+- `nord`, `night-owl`, `dracula`
+- `material-theme`, `material-theme-darker`, `material-theme-lighter`
+- `catppuccin-mocha`, `catppuccin-latte`, `rose-pine`, `rose-pine-dawn`
+
+The full list is maintained in [src/shiki-loader/themes.ts](src/shiki-loader/themes.ts).
+
+## UI Features
+
+The loader wraps each highlighted block with a small UI shell (see [src/shiki-loader/transformer.ts](src/shiki-loader/transformer.ts)):
+
+- Language label in the top-left corner
+- Copy-to-clipboard button with tooltip state ("Copy" → "Copied")
+- All styling is injected at runtime from `loader.css` into a `<style>` tag
+
+## Local Development
+
+This repository is a Next.js app using Bun.
+
+### Requirements
+
+- Bun
+
+### Scripts
+
+- `bun run dev` – Start the Next.js dev server
+- `bun run build` – Build the Next.js app
+- `bun run start` – Start the production server
+- `bun run build:lib` – Build `public/shiki-loader.js` from `src/shiki-loader/index.ts`
+- `bun run lint` – Run Biome checks
+- `bun run format` – Format with Biome
+- `bun run type-check` – Type-check the project
 
 ## License
 
-MIT - see [LICENSE](LICENSE) file
-
-## References
-
-- [PrismJS](https://github.com/PrismJS/prism)
-- [Highlight.js](https://highlightjs.org/)
-- [Shiki](https://shiki.style/)
+MIT – see [LICENSE](LICENSE)

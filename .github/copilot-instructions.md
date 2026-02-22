@@ -1,86 +1,89 @@
 # Copilot Instructions for highlight-it
 
 ## Project Overview
-This is a **browser-only** syntax highlighting library that provides a zero-config solution for web pages. It's designed with an engine-agnostic architecture, currently implementing Prism.js as the first engine. The entire library is distributed as a single script file loaded via CDN.
 
-## Architecture Pattern: Engine Abstraction
+This repo contains:
 
-The codebase follows a strict engine abstraction pattern to support multiple highlighting engines:
+- A **browser-only Shiki loader** in [src/shiki-loader](src/shiki-loader) that can be built into a single script (public/shiki-loader.js) and dropped into any HTML page.
+- A **Next.js demo app** (app directory) used to showcase and manually test the loader and its themes.
 
-- **Base Layer**: [engines/base.ts](engines/base.ts) defines the abstract `BaseEngine` class with resource loading and dependency management
-- **Engine Interface**: [type.ts](type.ts) defines `HighlightEngine` interface requiring `initialize()` and `highlight()` methods
-- **Implementation**: [engines/prism/index.ts](engines/prism/index.ts) extends `BaseEngine` to implement Prism.js-specific logic
-- **Entry Point**: [highlight-it.ts](highlight-it.ts) instantiates and orchestrates the engine
+All logic is client-side; there is no Node runtime dependency for the loader itself.
 
-When adding new engines, extend `BaseEngine` and implement the `HighlightEngine` interface.
+## Shiki Loader Architecture
 
-## Configuration System
+- Entry point: [src/shiki-loader/index.ts](src/shiki-loader/index.ts)
+	- Imports Shiki from esm.sh (`codeToHtml`, `bundledLanguages`).
+	- Auto-runs once on DOM ready, finds `pre code` blocks, and replaces them with highlighted HTML.
+- Transformer: [src/shiki-loader/transformer.ts](src/shiki-loader/transformer.ts)
+	- Wraps each Shiki `<pre>` in a container with language label and copy-to-clipboard button.
+- Utilities: [src/shiki-loader/utils.ts](src/shiki-loader/utils.ts)
+	- `readSearchParams()` reads `theme` and `dark-theme` from the loader script URL.
+	- `generateStyles()` injects CSS from loader.css into a `<style>` element.
+	- `handleCopyButtonClick()` implements robust clipboard copying and tooltip reset.
+- Themes: [src/shiki-loader/themes.ts](src/shiki-loader/themes.ts)
+	- Source of truth for supported Shiki theme names; keep this updated if adding/removing themes.
 
-The project uses a **declarative YAML configuration** ([engines/prism/config.yaml](engines/prism/config.yaml)) to manage:
-- Theme mappings (built-in vs external CDN URLs)
-- Plugin dependencies with cascade loading
-- URL prefixes for resource loading
+### Language Detection
 
-Configuration is parsed from URL query parameters in the script tag (see [utils.ts](utils.ts#L62-L95) `parseScriptParams()`):
-- `theme` or `config`: Theme selection (defaults to 'prism')
-- `darkmode`/`darkMode`: Dark mode theme override
-- `verbose`: Enable debug logging
+- Languages are taken from Shiki `bundledLanguages` (via `Object.keys(bundledLanguages)`).
+- The loader accepts `language-xxx` or `lang-xxx` classes on the `code` element.
+- If a language is unknown or unsupported, it logs a warning and skips that block.
 
-## Critical Build & Development Workflow
+### Theme Selection & Dark Mode
 
-**Build**: `bun build highlight-it.ts --outdir ./dist/ --target browser --bundle --minify`
-- Uses Bun bundler (not webpack/rollup) to create single-file browser bundle
-- Target is explicitly `browser`, not node
-- Outputs to `dist/` directory
+- `readSearchParams()` returns `{ theme, darkTheme }` with default `theme = "material-theme"`.
+- At runtime, `index.ts` checks `window.matchMedia('(prefers-color-scheme: dark)')`.
+- Active theme logic:
+	- If system is dark and `darkTheme` is set → use `darkTheme`.
+	- Else → use `theme`.
+- Theme values must be valid Shiki bundled theme names; unknown values fall back to `material-theme`.
 
-**Development/Testing**: `bun run test` starts an http-server
-- Serves HTML test files from `test/e2e/` directory
-- Test files load the script via CDN URL with query parameters (see [test/e2e/highlight-it-params-test.html](test/e2e/highlight-it-params-test.html))
-- No automated test suite; verify in browser manually
+## Build & Development Workflow
 
-**Type Checking**: `bun run type-check` or `type-check:watch`
-- Uses TypeScript for type safety but outputs plain JS bundle
+### Loader Build
 
-## Module Resolution Convention
+- Command: `bun run build:lib`
+	- Runs `bun build ./src/shiki-loader/index.ts --outfile ./public/shiki-loader.js --target browser --bundle --minify`.
+	- Then runs `scripts/embed-loader-css.ts` to inline `loader.css` into the JS bundle via the `LOADER_CSS` placeholder in utils.ts.
+- Result: a single browser-ready script at [public/shiki-loader.js](public/shiki-loader.js).
 
-Uses `@/` path alias (configured in [tsconfig.json](tsconfig.json#L22-L24)) for all internal imports:
-```typescript
-import { PrismEngine } from '@/engines';
-import { log, error as logError } from '@/utils';
-```
-Never use relative paths like `../` or `./` for cross-file imports.
+### Next.js App
 
-## Resource Loading Pattern
+- Dev server: `bun run dev`.
+- Production build: `bun run build` then `bun run start`.
+- The app under [src/app](src/app) is just a UI wrapper for demoing the loader; avoid coupling loader internals to Next-specific APIs.
 
-The [engines/base.ts](engines/base.ts) implements a **singleton resource tracking system**:
-- Static `loadedResources` Set prevents duplicate script/link loading
-- `loadResource()` method handles dependency cascading (loads deps first, then parent)
-- Resources are appended to `document.body` using `appendToBody()` utility
+### Quality Tooling
 
-Example from [engines/prism/index.ts](engines/prism/index.ts#L85-L94): plugins declare dependencies in config.yaml, and the loader automatically resolves them.
+- Lint: `bun run lint` → Biome.
+- Format: `bun run format` → Biome with 4-space indentation and single quotes.
+- Type-check: `bun run type-check` (no emit).
 
-## Browser-Only Guards
+## Implementation Guidelines for Copilot
 
-The codebase includes essential browser environment checks:
-- [highlight-it.ts](highlight-it.ts#L9-L11): `typeof document === 'undefined'` guard
-- [highlight-it.ts](highlight-it.ts#L14-L17): `window.__highlightItInitialized` prevents double initialization
-- Prism.js manual mode: `window.Prism = { manual: true }` in [engines/prism/index.ts](engines/prism/index.ts#L23-L28)
+- Keep the loader **framework-agnostic**:
+	- Do not import React/Next into [src/shiki-loader](src/shiki-loader).
+	- Only rely on standard DOM APIs and the Shiki esm.sh imports.
+- Preserve browser-only behavior:
+	- Access `document`, `window`, `navigator.clipboard` only in code that clearly runs in the browser.
+	- Auto-run highlighting once; respect the `hasRun` guard in index.ts.
+- When editing loader styles:
+	- Modify [src/shiki-loader/loader.css](src/shiki-loader/loader.css), then rely on the embed script to inline it.
+	- Do not hard-code large CSS blocks directly in TypeScript.
+- When adding new themes:
+	- Ensure Shiki actually supports the theme name.
+	- Update [src/shiki-loader/themes.ts](src/shiki-loader/themes.ts) and, if needed, any UI in the demo app that lists themes.
+- When changing public behavior of the loader:
+	- Prefer adding new, clearly-named URL parameters over breaking existing ones (`theme`, `dark-theme`).
+	- Keep configuration parsing contained in utils.ts.
 
-## Code Style
+## When Extending Functionality
 
-Uses Biome (not ESLint/Prettier) for linting and formatting:
-- 4-space indentation
-- Single quotes for JS/TS
-- 110 character line width
-- Run via Biome VSCode extension or CLI
+- To add new UI controls around code blocks (e.g., line numbers toggle):
+	- Extend the transformer in [src/shiki-loader/transformer.ts](src/shiki-loader/transformer.ts) to adjust the wrapper structure.
+	- Add corresponding CSS rules in loader.css.
+- To support additional script configuration:
+	- Update `readSearchParams()` in utils.ts.
+	- Keep the behavior simple and documented in README.md.
 
-## Theme System Logic
-
-[engines/prism/index.ts](engines/prism/index.ts#L49-L73) implements smart theme selection:
-1. Checks `prefers-color-scheme: dark` media query
-2. Tries darkMode theme if dark + darkMode param exists
-3. Falls back to light theme if not dark mode
-4. Supports both built-in (Prism CDN) and external (prism-themes CDN) themes
-5. Defaults to basic 'prism' theme if not found
-
-When adding themes, update [engines/prism/config.yaml](engines/prism/config.yaml) under `builtIn.themes` or `external.themes`.
+These instructions should guide Copilot to keep the Shiki loader small, browser-only, and easy to embed, while leaving the Next.js demo app free to evolve independently.
