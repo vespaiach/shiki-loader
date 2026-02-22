@@ -173,12 +173,10 @@ class HighlightingEngine:
           <p className="py-4 text-sm leading-relaxed">
             <strong>shiki-loader</strong> is a tiny, copy-and-paste script that loads the
             Shiki syntax-highlighting engine for you—no integration
-            headaches. It pulls Shiki from the esm.sh CDN, automatically
+            headaches. It pulls <a href="https://shiki.style/">Shiki</a> from the esm.sh CDN, automatically
             finds all <code>&lt;pre&gt;&lt;code&gt;</code> blocks with classes like
             <code>language-*</code>, and asks Shiki to highlight them. You
-            choose the theme via search parameters (such as
-            <code>theme</code> and optional <code>dark-theme</code>) on the
-            script URL.
+            choose the theme via search parameters on the script URL.
           </p>
           <div className="modal-action">
             <form method="dialog">
