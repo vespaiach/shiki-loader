@@ -64,12 +64,9 @@ export default function HomeClient() {
     <main className="flex flex-col md:flex-row justify-stretch min-h-screen">
       <div className="md:flex-2 flex-1 bg-base-200 text-base-content px-8 pt-3 min-w-80 pb-10">
         <div className="flex items-center justify-end gap-2">
-          <a
-            href="/about"
-            className="btn btn-ghost btn-circle btn-sm"
-            aria-label="About">
+          <Link href="/about" className="btn btn-ghost btn-circle btn-sm" aria-label="About">
             <Info size={22} />
-          </a>
+          </Link>
           <a
             href="https://github.com/vespaiach/shiki-loader"
             title="Shiki Loader Github Repository"
