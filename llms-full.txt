@@ -33,7 +33,7 @@ A drop-in browser script that automatically syntax-highlights `<pre><code>` bloc
 Add a single `<script>` tag to your HTML:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js" type="module"></script>
 ```
 
 That's it. All code blocks with a language class will be highlighted on page load.
@@ -42,12 +42,12 @@ That's it. All code blocks with a language class will be highlighted on page loa
 
 ```html
 <!-- Single theme -->
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js?theme=github-dark" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js?theme=github-dark" type="module"></script>
 
 <!-- Light and dark mode themes -->
 <script
   src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js?theme=github-light&dark-theme=github-dark"
-  defer
+  type="module"
 ></script>
 ```
 
@@ -104,7 +104,7 @@ bun run build:lib
 The output file is `public/shiki-loader.js`. Copy it to your project's static assets and reference it in your HTML:
 
 ```html
-<script src="/assets/shiki-loader.js?theme=dracula" defer></script>
+<script src="/assets/shiki-loader.js?theme=dracula" type="module"></script>
 ```
 
 ## How It Works

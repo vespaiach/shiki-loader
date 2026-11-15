@@ -147,7 +147,7 @@ The loader reads URL search params on the script tag:
 
 ```html
 <!-- Use 'github-light' in light mode, 'github-dark' in dark mode -->
-<script src="/shiki-loader.js?theme=github-light&dark-theme=github-dark" defer></script>
+<script src="/shiki-loader.js?theme=github-light&dark-theme=github-dark" type="module"></script>
 ```
 
 At runtime:
@@ -207,9 +207,9 @@ Unknown theme names fall back to `material-theme`.
 
 ## Testing
 
-Currently, there are no test files in the repository, but the project is configured for Bun test runner. To add tests:
+Loader tests live in `src/shiki-loader/__tests__/`. `test/setup.ts` (preloaded via `bunfig.toml`) registers a happy-dom DOM and replaces the esm.sh Shiki import with a small fake, so tests never hit the network. To add tests:
 
-1. Create test files in `src/__tests__/` or alongside source files (e.g., `src/shiki-loader/__tests__/transformer.test.ts`)
+1. Create test files alongside source files (e.g., `src/shiki-loader/__tests__/transformer.test.ts`)
 2. Use Bun's test API:
    ```typescript
    import { test, expect } from "bun:test";
