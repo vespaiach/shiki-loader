@@ -33,6 +33,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Run tests
+        run: bun test
+
       - name: Build static site
         run: |
           bun run build:lib
