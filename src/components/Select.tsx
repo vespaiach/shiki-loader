@@ -25,7 +25,7 @@ export default function Select({
   return (
     <fieldset className="fieldset">
       <legend className="fieldset-legend">{label}</legend>
-      <select className="select w-full" value={value ?? ""} onChange={onChange}>
+      <select className="select w-full" aria-label={label} value={value ?? ""} onChange={onChange}>
         {allowEmpty ? (
           <option value="">None</option>
         ) : (

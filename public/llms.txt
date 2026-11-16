@@ -1,0 +1,29 @@
+# Shiki Loader
+
+> Shiki Loader is a free, open-source (MIT) browser script that adds Shiki syntax highlighting to any web page with a single `<script>` tag. It automatically finds `<pre><code>` blocks with `language-*` or `lang-*` classes, highlights them using Shiki 3 loaded from esm.sh at runtime, and wraps each block with a language label and a copy-to-clipboard button. No build step, npm install, or framework is required.
+
+Key facts:
+- Install: `<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@v2.1.0/public/shiki-loader.js" type="module"></script>`
+- Configuration is via URL query parameters on the script tag: `theme` (default `material-theme`) and optional `dark-theme`, which is applied automatically when the visitor's system prefers dark mode.
+- Unknown theme names fall back to `material-theme`; unknown languages are skipped with a console warning.
+- Supports all Shiki bundled languages and 60+ Shiki themes.
+- Call `window.ShikiLoader.highlight(root?)` to highlight code added after page load; already-highlighted blocks are skipped.
+- Works on static sites, WordPress, Ghost, and any plain HTML page. Self-hosting is supported.
+- Latest version: v2.1.0. License: MIT. Maintainer: vespaiach.
+
+## Docs
+
+- [Home and live demo](https://vespaiach.github.io/shiki-loader/): Copy-paste install snippet, theme picker, and live highlighted examples
+- [About](https://vespaiach.github.io/shiki-loader/about): What Shiki Loader is, key features, and how it works
+- [README](https://github.com/vespaiach/shiki-loader/blob/main/README.md): Full usage guide covering CDN install, theme and dark-theme parameters, re-highlighting dynamic content, and self-hosting
+
+## Source
+
+- [GitHub repository](https://github.com/vespaiach/shiki-loader): Source code, issues, and releases
+- [Releases](https://github.com/vespaiach/shiki-loader/releases): Version history and changelog
+- [Loader script on jsDelivr](https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@v2.1.0/public/shiki-loader.js): The built, minified script
+
+## Optional
+
+- [Shiki documentation](https://shiki.style/): The underlying highlighting engine, list of themes and languages
+- [Full repository context for coding agents](https://raw.githubusercontent.com/vespaiach/shiki-loader/main/llms-full.txt): Detailed source-level documentation
