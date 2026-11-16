@@ -3,48 +3,40 @@ import { bundledLanguages, codeToHtml } from "https://esm.sh/shiki@3.0.0";
 import createShikiLoaderTransformer from "./transformer";
 import { generateStyles, handleCopyButtonClick, readSearchParams } from "./utils";
 
-const languages = new Set(Object.keys(bundledLanguages));
+// Shiki's plain-text languages are not part of bundledLanguages.
+const languages = new Set([...Object.keys(bundledLanguages), "text", "plaintext", "txt", "plain"]);
+const { theme, darkTheme } = readSearchParams(import.meta.url);
 let hasRun = false;
 
-async function highlight() {
-  if (hasRun) return;
-  hasRun = true;
+async function highlight(root: ParentNode = document) {
+  if (!hasRun) {
+    hasRun = true;
+    // Prepended so the host page's own CSS can override the loader's styles.
+    document.head.prepend(generateStyles());
+  }
 
-  document.head.appendChild(generateStyles());
-
-  const { theme, darkTheme } = readSearchParams();
-  const codeBlocks = document.querySelectorAll("pre code");
-  const isDarkMode = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  const activeTheme = (isDarkMode && darkTheme) || theme;
-
-  const highlightTasks = Array.from(codeBlocks).map(async (codeBlock) => {
+  const highlightTasks = Array.from(root.querySelectorAll("pre code")).map(async (codeBlock) => {
     const element = codeBlock as HTMLElement;
     const parent = element.parentElement;
     if (!parent) return;
 
     // Extract language from class (e.g., language-js)
-    const classNames = Array.from(element.classList);
-    const langClass = classNames.find((c) => c.startsWith("language-") || c.startsWith("lang-"));
+    const langClass = Array.from(element.classList).find((c) => /^(language|lang)-/.test(c));
+    if (!langClass) return;
 
-    let lang = "unknown";
-    if (langClass) {
-      if (langClass.startsWith("language-")) {
-        lang = langClass.replace("language-", "");
-      } else if (langClass.startsWith("lang-")) {
-        lang = langClass.replace("lang-", "");
-      }
-    }
-
-    if (lang === "unknown" || !languages.has(lang)) {
-      console.warn("Unsupported or unknown language:", lang);
+    const lang = langClass.replace(/^(language|lang)-/, "").toLowerCase();
+    if (!languages.has(lang)) {
+      console.warn("Unsupported language:", lang);
       return;
     }
 
     try {
-      const code = element.textContent || "";
+      // Markup like <code>\n...\n</code> would otherwise render blank first and last lines.
+      const code = (element.textContent || "").replace(/^\n|\n$/g, "");
       const html = await codeToHtml(code, {
         lang,
-        theme: activeTheme || "material-theme",
+        // With two themes Shiki emits both sets of colors and loader.css switches between them.
+        ...(darkTheme ? { themes: { light: theme, dark: darkTheme } } : { theme }),
         transformers: [createShikiLoaderTransformer(lang)],
       });
 
@@ -53,7 +45,13 @@ async function highlight() {
       const newPre = tempDiv.firstElementChild as HTMLElement | null;
 
       if (newPre) {
-        newPre.classList.add(langClass || `language-${lang}`);
+        for (const { name, value } of Array.from(parent.attributes)) {
+          if (name !== "class" && name !== "style") newPre.setAttribute(name, value);
+        }
+        newPre.classList.add(...Array.from(parent.classList), langClass);
+        newPre
+          .querySelector<HTMLButtonElement>("button[data-target='copy']")
+          ?.addEventListener("click", handleCopyButtonClick);
         parent.replaceWith(newPre);
       }
     } catch (err) {
@@ -62,13 +60,10 @@ async function highlight() {
   });
 
   await Promise.allSettled(highlightTasks);
-
-  // Attach event listener for copy buttons
-  document.querySelectorAll("button[data-target='copy']").forEach((b) => {
-    const button = b as HTMLButtonElement;
-    button.addEventListener("click", handleCopyButtonClick);
-  });
 }
+
+// Lets pages highlight content added after load: ShikiLoader.highlight(container)
+Object.assign(window, { ShikiLoader: { highlight } });
 
 // Side effect to automatically highlight on load
 // Works both for scripts present at initial load and for
