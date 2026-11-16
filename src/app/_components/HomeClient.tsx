@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Github from "@/components/icons/Github";
 import Info from "@/components/icons/Info";
@@ -12,22 +11,23 @@ import { SHIKI_THEMES } from "@/shiki-loader/themes";
 export default function HomeClient() {
   const ranRef = useRef(false);
   const [highlightHtmlCode, setHighlightHtmlCode] = useState(false);
-  const params = useSearchParams();
-  const [theme, setTheme] = useState(() => {
-    const themeParam = params.get("theme") ?? "";
-    if (SHIKI_THEMES.includes(themeParam)) {
-      return themeParam;
-    }
-    return "material-theme";
-  });
+  const [theme, setTheme] = useState("material-theme");
+  const [darkTheme, setDarkTheme] = useState("");
+  const [ready, setReady] = useState(false);
 
-  const [darkTheme, setDarkTheme] = useState(() => {
+  // Read URL params after mount so the static export prerenders the page instead of bailing out to CSR.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const themeParam = params.get("theme") ?? "";
     const darkThemeParam = params.get("dark-theme") ?? "";
-    if (SHIKI_THEMES.includes(darkThemeParam)) {
-      return darkThemeParam;
+    if (SHIKI_THEMES.includes(themeParam)) {
+      setTheme(themeParam);
     }
-    return "";
-  });
+    if (SHIKI_THEMES.includes(darkThemeParam)) {
+      setDarkTheme(darkThemeParam);
+    }
+    setReady(true);
+  }, []);
 
   const handleClick = () => {
     const newParams = new URLSearchParams();
@@ -42,7 +42,7 @@ export default function HomeClient() {
   };
 
   useEffect(() => {
-    if (theme && !ranRef.current) {
+    if (ready && theme && !ranRef.current) {
       ranRef.current = true;
       document.querySelectorAll('script[src*="shiki-loader.js"]').forEach((s) => {
         s.remove();
@@ -58,7 +58,7 @@ export default function HomeClient() {
       script.defer = true;
       document.body.appendChild(script);
     }
-  }, [theme, darkTheme]);
+  }, [ready, theme, darkTheme]);
 
   return (
     <main className="flex flex-col md:flex-row justify-stretch min-h-screen">
@@ -81,28 +81,44 @@ export default function HomeClient() {
           Shiki Loader
         </h1>
         <p className="text-center text-sm mb-12 font-normal">
-          The effortless way to highlight your code snippets.
+          <strong>Shiki Loader adds Shiki syntax highlighting to any web page with one script tag.</strong> It
+          finds every <code>&lt;pre&gt;&lt;code class="language-…"&gt;</code> block, highlights it with Shiki
+          3, and adds a language label and a copy button. No build step, no framework, MIT licensed. Latest:
+          v2.1.0.
         </p>
 
         <div className="mb-7">
-          <h2 className="font-semibold mb-2">Integration</h2>
-          <p className="mb-2">
-            Simply copy {/** biome-ignore lint/a11y/useValidAnchor: I want to link to the script section */}
-            <a
-              href="#the-script"
-              className="link link-accent"
-              onClick={(e) => {
-                e.preventDefault();
-                setHighlightHtmlCode((v) => !v);
-                setTimeout(() => {
-                  setHighlightHtmlCode(false);
-                }, 2000);
-              }}>
-              this snippet the HTML snippet on the right
-            </a>{" "}
-            and paste it into the <code>&lt;body&gt;</code> tag of your web pages. Use the Customization panel
-            below to perfectly match your brand's theme.
-          </p>
+          <h2 className="font-semibold mb-2">How do I install Shiki Loader?</h2>
+          <ol className="list-decimal ml-5 mb-2 space-y-1">
+            <li>
+              Copy {/** biome-ignore lint/a11y/useValidAnchor: I want to link to the script section */}
+              <a
+                href="#the-script"
+                className="link link-accent"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setHighlightHtmlCode((v) => !v);
+                  setTimeout(() => {
+                    setHighlightHtmlCode(false);
+                  }, 2000);
+                }}>
+                the HTML snippet on the right
+              </a>
+              . It updates as you pick themes below.
+            </li>
+            <li>
+              Paste it into your page's <code>&lt;body&gt;</code>, your theme footer, or a WordPress/Ghost
+              custom HTML block.
+            </li>
+            <li>
+              Give each <code>&lt;code&gt;</code> element a class like <code>language-js</code> or{" "}
+              <code>lang-ts</code>. Unsupported languages are skipped with a console warning.
+            </li>
+            <li>
+              Optional: pick a Dark Mode Override to switch themes automatically when the visitor's system is
+              in dark mode.
+            </li>
+          </ol>
         </div>
 
         <fieldset className="fieldset border-base-content rounded-lg w-full border p-4">
