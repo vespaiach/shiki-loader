@@ -4,14 +4,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Shiki](https://img.shields.io/badge/Powered%20by-Shiki-ff69b4)](https://shiki.style/)
 
-A drop-in browser script that automatically syntax-highlights `<pre><code>` blocks using [Shiki](https://shiki.style/). Zero dependencies, zero build steps for consumers, framework-agnostic.
+A drop-in browser script that automatically syntax-highlights `<pre><code>` blocks using [Shiki](https://shiki.style/). Nothing to install and no build step for consumers, framework-agnostic. Shiki itself is loaded from [esm.sh](https://esm.sh/) at runtime.
 
 **[Live Demo](https://vespaiach.github.io/shiki-loader/)**
 
 ## Features
 
 - Automatic detection and highlighting of all `<pre><code>` blocks on the page
-- 60+ bundled themes with automatic dark mode support via `prefers-color-scheme`
+- 60+ bundled themes, with a light/dark pair that follows `prefers-color-scheme` live
 - All [Shiki bundled languages](https://shiki.style/languages) supported out of the box
 - Language label and copy-to-clipboard button on every code block
 - Self-contained single script — CSS is embedded, Shiki is loaded from [esm.sh](https://esm.sh/) at runtime
@@ -60,7 +60,36 @@ The loader is configured entirely via URL query parameters on the script `src`.
 | `theme`      | Any bundled Shiki theme name | `material-theme` | Theme used in light mode (and dark if no dark-theme) |
 | `dark-theme` | Any bundled Shiki theme name | _(none)_         | Theme used when system prefers dark mode         |
 
-Dark mode is detected automatically via `prefers-color-scheme: dark`. When `dark-theme` is set and the system is in dark mode, that theme is used; otherwise `theme` applies.
+When `dark-theme` is set, each block is rendered with both themes and CSS switches between them via `prefers-color-scheme`, so the colors follow the system setting live, without a reload. Without `dark-theme`, `theme` is always used.
+
+Language names are case-insensitive. `text`, `plaintext`, `txt` and `plain` get the wrapper and copy button without highlighting. Blocks with an unsupported language, or no language class, are left untouched.
+
+### Highlighting Content Added Later
+
+The loader runs once when the page loads. For content inserted afterwards (SPA navigation, lazy-loaded comments), call:
+
+```js
+await window.ShikiLoader.highlight(container); // or highlight() for the whole document
+```
+
+Blocks that are already highlighted are skipped, so it is safe to call repeatedly.
+
+### Customizing the Look
+
+The loader's styles are inserted at the top of `<head>`, so your own stylesheet overrides them without `!important`:
+
+```css
+/* Hide the window dots */
+.shiki-loader-mockup-code:before { display: none; }
+
+/* Scroll long lines instead of wrapping them */
+.shiki-loader-mockup-code pre { white-space: pre; display: block; }
+
+/* Hide the language label */
+.shiki-loader-language-label { display: none; }
+```
+
+Any `id`, classes and other attributes on the original `<pre>` are carried over to the highlighted block.
 
 ### Supported Themes
 
@@ -98,14 +127,12 @@ The output file is `public/shiki-loader.js`. Copy it to your project's static as
 
 ## How It Works
 
-1. On DOM ready, the script reads `theme` and `dark-theme` from its own URL parameters
-2. Detects system color scheme preference
+1. The script reads `theme` and `dark-theme` from its own URL (`import.meta.url`), so it must be loaded with `type="module"`
+2. On DOM ready, it injects its embedded CSS once
 3. Finds all `<pre><code>` elements with a `language-*` or `lang-*` class
-4. Highlights each block using Shiki (loaded from esm.sh at runtime)
+4. Highlights each block using Shiki (loaded from esm.sh at runtime), with both themes when `dark-theme` is set
 5. Wraps each block with a language label and copy-to-clipboard button
-6. Injects embedded CSS for styling
-
-The script includes a single-run guard — it is safe to inject multiple times and will only highlight once.
+6. Exposes `window.ShikiLoader.highlight()` for content added later
 
 ## Development
 

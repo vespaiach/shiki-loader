@@ -38,6 +38,7 @@ export default function createShikiLoaderTransformer(lang: string) {
                   type: "button",
                   class: "shiki-loader-copy-button",
                   "data-target": "copy",
+                  "aria-label": "Copy code",
                 },
                 children: [
                   {

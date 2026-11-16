@@ -15,42 +15,18 @@ export function generateStyles() {
   return style;
 }
 
-export function readSearchParams(): LoaderInputs {
-  let scriptElement = document.currentScript as HTMLScriptElement;
+export function readSearchParams(src: string): LoaderInputs {
+  const config: LoaderInputs = { theme: "material-theme" };
+  const params = new URL(src).searchParams;
 
-  // Fallback for dynamically added scripts where currentScript might be null
-  if (!scriptElement || scriptElement.nodeName !== "SCRIPT") {
-    const scripts = document.getElementsByTagName("script");
-    for (let i = scripts.length - 1; i >= 0; i--) {
-      const s = scripts[i];
-      if (s.src && (s.src.includes("shiki-loader.js") || s.src.includes("index.ts"))) {
-        scriptElement = s;
-        break;
-      }
-    }
+  const themeParam = params.get("theme") ?? "";
+  if (themes.has(themeParam)) {
+    config.theme = themeParam;
   }
 
-  // Default configuration
-  const config: LoaderInputs = { theme: "material-theme" };
-
-  // Parse URL parameters if script element is available
-  if (scriptElement?.src) {
-    try {
-      const url = new URL(scriptElement.src);
-
-      const themeParam = url.searchParams.get("theme") ?? "";
-      if (themeParam && themes.has(themeParam)) {
-        config.theme = themeParam;
-      }
-
-      const darkThemeParam = url.searchParams.get("dark-theme") ?? "";
-      if (darkThemeParam && themes.has(darkThemeParam)) {
-        config.darkTheme = darkThemeParam;
-      }
-    } catch (error) {
-      console.error("Failed to parse script URL:", error);
-      return config;
-    }
+  const darkThemeParam = params.get("dark-theme") ?? "";
+  if (themes.has(darkThemeParam)) {
+    config.darkTheme = darkThemeParam;
   }
 
   return config;
@@ -91,6 +67,7 @@ export async function handleCopyButtonClick(event: MouseEvent) {
     }
   } catch (err) {
     console.error("Failed to copy code to clipboard:", err);
+    return;
   }
 
   if (!tooltip) return;

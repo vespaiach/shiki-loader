@@ -9,9 +9,13 @@ GlobalRegistrator.register({ settings: { handleDisabledFileLoadingAsSuccess: tru
 mock.module("https://esm.sh/shiki@3.0.0", () => ({
   bundledLanguages: { js: {}, ts: {} },
   bundledThemes: { "material-theme": {}, "github-light": {}, "github-dark": {} },
-  codeToHtml: async (code: string, options: { lang: string; theme: string }) => {
+  codeToHtml: async (
+    code: string,
+    options: { lang: string; theme?: string; themes?: { light: string; dark: string } },
+  ) => {
+    const theme = options.theme ?? `${options.themes?.light}+${options.themes?.dark}`;
     const pre = document.createElement("pre");
     pre.appendChild(document.createElement("code")).textContent = code;
-    return `<div class="shiki-loader-mockup-code" data-lang="${options.lang}" data-theme="${options.theme}"><div class="shiki-loader-tooltip" data-tip="Copy"><button type="button" data-target="copy"></button></div>${pre.outerHTML}</div>`;
+    return `<div class="shiki-loader-mockup-code" data-lang="${options.lang}" data-theme="${theme}"><div class="shiki-loader-tooltip" data-tip="Copy"><button type="button" data-target="copy"></button></div>${pre.outerHTML}</div>`;
   },
 }));
