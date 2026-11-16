@@ -74,7 +74,7 @@ The loader is built from a single entry point and bundled into one script:
 
 ### Configuration Files
 
-- **`biome.json`**: Linter & formatter (2-space indent, 110-char line width, single quotes)
+- **`biome.json`**: Linter & formatter (2-space indent, 110-char line width, double quotes)
 - **`tsconfig.json`**: TypeScript config (ES2017 target, strict mode, path alias `@/*`)
 - **`next.config.ts`**: Static export for GitHub Pages; `basePath` and `assetPrefix` conditional on production
 - **`.github/copilot-instructions.md`**: Detailed guidelines for Copilot (subset of this document)
@@ -201,7 +201,7 @@ Unknown theme names fall back to `material-theme`.
 - **Type Checking**: `bun run type-check` (tsc with no emit)
 - **Testing**: `bun test` (Bun test runner)
 - **Conventions**:
-  - 2-space indentation, 110-character line width, single quotes (enforced by Biome)
+  - 2-space indentation, 110-character line width, double quotes (enforced by Biome)
   - TypeScript strict mode enabled
   - Path alias `@/*` points to `src/` or repo root
 

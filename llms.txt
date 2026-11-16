@@ -2,7 +2,7 @@
 
 > A drop-in, framework-agnostic browser script that automatically syntax-highlights `<pre><code>` blocks using Shiki. It bundles into a single self-contained JS file with embedded CSS, loads Shiki from esm.sh at runtime, and adds language labels and copy-to-clipboard buttons to every code block. Configured entirely via URL query parameters on the script tag.
 
-The loader is browser-only with zero Node.js dependencies. Shiki is imported from esm.sh at runtime, not bundled. CSS is inlined into the JS bundle at build time via a placeholder replacement step. A single-run guard prevents duplicate highlighting if the script is injected multiple times.
+The loader is browser-only with zero Node.js dependencies. Shiki is imported from esm.sh at runtime, not bundled. CSS is inlined into the JS bundle at build time via a placeholder replacement step. The script must be loaded with `type="module"`. `window.ShikiLoader.highlight()` re-runs highlighting for content added later and skips blocks that are already highlighted.
 
 The repository contains two parts: the standalone loader (`src/shiki-loader/`) and a Next.js demo app (`src/app/`) deployed to GitHub Pages.
 
