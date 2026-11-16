@@ -22,7 +22,7 @@ A drop-in browser script that automatically syntax-highlights `<pre><code>` bloc
 Add a single `<script>` tag to your HTML:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@v2.1.0/public/shiki-loader.js" type="module"></script>
 ```
 
 That's it. All code blocks with a language class will be highlighted on page load.
@@ -31,11 +31,11 @@ That's it. All code blocks with a language class will be highlighted on page loa
 
 ```html
 <!-- Single theme -->
-<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js?theme=github-dark" type="module"></script>
+<script src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@v2.1.0/public/shiki-loader.js?theme=github-dark" type="module"></script>
 
 <!-- Light and dark mode themes -->
 <script
-  src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@main/public/shiki-loader.js?theme=github-light&dark-theme=github-dark"
+  src="https://cdn.jsdelivr.net/gh/vespaiach/shiki-loader@v2.1.0/public/shiki-loader.js?theme=github-light&dark-theme=github-dark"
   type="module"
 ></script>
 ```
