@@ -72,7 +72,7 @@ export default function RootLayout({
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: static inline script, no user input */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <GoogleTagManager gtmId="GTM-TXB9CSX9" />
+      <GoogleTagManager gtmId="GTM-MVF8T6PM" />
       <body className="antialiased">
         <JsonLd data={siteJsonLd} />
         {children}
