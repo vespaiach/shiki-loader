@@ -8,38 +8,38 @@ const DEFAULT_THEME_OPTIONS = SHIKI_THEMES.map((theme) => ({
 }));
 
 export default function Select({
+  id,
   label,
   value,
   onChange,
   options = DEFAULT_THEME_OPTIONS,
-  allowEmpty = false,
-  optionalText,
+  emptyLabel,
 }: {
+  id: string;
   label: string;
-  value: string | null;
+  value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options?: { label: string; value: string }[];
-  allowEmpty?: boolean;
-  optionalText?: string;
+  /** Adds an empty first option with this text. */
+  emptyLabel?: string;
 }) {
   return (
-    <fieldset className="fieldset">
-      <legend className="fieldset-legend">{label}</legend>
-      <select className="select w-full" aria-label={label} value={value ?? ""} onChange={onChange}>
-        {allowEmpty ? (
-          <option value="">None</option>
-        ) : (
-          <option disabled value="">
-            Pick a theme
-          </option>
-        )}
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-xs text-mod-ink/80">
+        {label}
+      </label>
+      <select
+        id={id}
+        className="min-h-11 w-full rounded-none border border-mod-rule bg-mod-bg px-2.5 text-sm text-mod-ink hover:border-mod-ink/45 focus-visible:border-mod-accent"
+        value={value}
+        onChange={onChange}>
+        {emptyLabel !== undefined && <option value="">{emptyLabel}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
-      {Boolean(optionalText) && <span className="label">{optionalText}</span>}
-    </fieldset>
+    </div>
   );
 }
