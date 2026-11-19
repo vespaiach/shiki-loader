@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import { GoogleTagManager } from "@next/third-parties/google";
 import JsonLd from "@/components/JsonLd";
+
+const archivo = Archivo({ subsets: ["latin"], weight: ["400", "600", "800"], variable: "--font-archivo" });
+
+// Runs before paint so a stored or system dark preference never flashes light first.
+const themeScript = `try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}`;
 
 const title = "Shiki Loader";
 const description =
@@ -60,7 +66,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: themeScript sets data-theme before React hydrates.
+    <html lang="en" className={archivo.variable} suppressHydrationWarning>
+      <head>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: static inline script, no user input */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <GoogleTagManager gtmId="GTM-TXB9CSX9" />
       <body className="antialiased">
         <JsonLd data={siteJsonLd} />
