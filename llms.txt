@@ -23,11 +23,6 @@ The repository contains two parts: the standalone loader (`src/shiki-loader/`) a
 - [Theme Selection](./README.md): URL params `theme` (light/default) and `dark-theme` (dark mode) on script src; defaults to `material-theme`; unknown themes fall back to default
 - [Language Detection](./README.md): Recognizes `language-*` or `lang-*` CSS classes on `<code>` elements; validates against Shiki's `bundledLanguages`
 
-## Development
-
-- [CLAUDE.md](./CLAUDE.md): Full development guide covering build pipeline (`bun run build:lib`), CSS embedding process, pre-merge checklist, and contribution guidelines
-
 ## Optional
 
 - [Demo App](./src/app/): Next.js static site showcasing the loader with theme selector, deployed to GitHub Pages
-- [Copilot Instructions](./.github/copilot-instructions.md): AI assistant guidelines for working with this codebase
